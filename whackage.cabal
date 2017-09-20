@@ -1,0 +1,22 @@
+name:                whackage
+version:             0.1.0.0
+synopsis:            A whack-a-mole game with text graphics
+description:         Hit targets with proper timing on a 3x3 grid.
+license:             MIT
+license-file:        LICENSE
+author:              doublescale
+maintainer:          doublescale@tutanota.com
+category:            Game
+build-type:          Simple
+extra-source-files:  ChangeLog.md
+cabal-version:       >=1.10
+
+executable whackage
+  main-is:             Main.hs
+  hs-source-dirs:      src
+  default-language:    Haskell2010
+  ghc-options:         -threaded
+  -- other-modules:       
+  build-depends:       base
+                     , brick
+                     , vty
