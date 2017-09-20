@@ -16,7 +16,9 @@ executable whackage
   hs-source-dirs:      src
   default-language:    Haskell2010
   ghc-options:         -threaded
-  -- other-modules:       
+  other-modules:       Whackage.Types
+                     , Whackage.Render
+                     , Whackage.Event
   build-depends:       base
                      , vector
                      , vty
