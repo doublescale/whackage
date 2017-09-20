@@ -18,5 +18,6 @@ executable whackage
   ghc-options:         -threaded
   -- other-modules:       
   build-depends:       base
-                     , brick
+                     , vector
                      , vty
+                     , brick
