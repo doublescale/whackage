@@ -26,4 +26,6 @@ eventHandler state (VtyEvent (EvKey k _)) = handleKey k
     handleKey _           = continue state
     hitTarget i =
       continue $ state { gameGrid = gameGrid state // [(i, NoTarget)] }
+eventHandler state (AppEvent (CreateTarget i)) =
+  continue $ state { gameGrid = gameGrid state // [(i, Enemy)] }
 eventHandler state _ = continue state
