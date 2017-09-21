@@ -11,27 +11,26 @@ eventHandler :: AppState
              -> EventM n (Next AppState)
 eventHandler (InTitle titleState) (VtyEvent (EvKey _ _)) =
   continue . InGame . startGame $ titleState
-eventHandler state@(InTitle titleState) _ = continue state
+eventHandler state@(InTitle _) _ = continue state
 eventHandler (InGame gameState) event =
   fmap InGame <$> gameEventHandler gameState event
 
 gameEventHandler :: GameState
                  -> BrickEvent n CustomEvent
                  -> EventM n (Next GameState)
-gameEventHandler state (VtyEvent (EvKey k _)) = handleKey k
+gameEventHandler state (VtyEvent (EvKey KEsc _)) = halt state
+gameEventHandler state (VtyEvent (EvKey k [])) = continue $ handleKey k state
   where
-    handleKey KEsc        = halt state
-    handleKey (KChar '1') = hit 0
-    handleKey (KChar '2') = hit 1
-    handleKey (KChar '3') = hit 2
-    handleKey (KChar '4') = hit 3
-    handleKey (KChar '5') = hit 4
-    handleKey (KChar '6') = hit 5
-    handleKey (KChar '7') = hit 6
-    handleKey (KChar '8') = hit 7
-    handleKey (KChar '9') = hit 8
-    handleKey _           = continue state
-    hit i = continue $ hitTarget i state
+    handleKey (KChar '1') = hitTarget 0
+    handleKey (KChar '2') = hitTarget 1
+    handleKey (KChar '3') = hitTarget 2
+    handleKey (KChar '4') = hitTarget 3
+    handleKey (KChar '5') = hitTarget 4
+    handleKey (KChar '6') = hitTarget 5
+    handleKey (KChar '7') = hitTarget 6
+    handleKey (KChar '8') = hitTarget 7
+    handleKey (KChar '9') = hitTarget 8
+    handleKey _           = id
 gameEventHandler state (AppEvent CreateTarget) =
   continue $ makeRandomTarget state
 gameEventHandler state _ = continue state

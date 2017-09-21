@@ -17,6 +17,7 @@ main :: IO ()
 main = do
   chan <- newBChan 64
   void . forkIO . forever $ do
+    -- TODO: Only send events when in-game.
     threadDelay 500000
     writeBChan chan CreateTarget
   initState <- getInitState
