@@ -9,7 +9,7 @@ import Graphics.Vty.Input
 import Whackage.Types
 
 eventHandler :: AppState
-             -> BrickEvent AppName AppEvent
+             -> BrickEvent AppName CustomEvent
              -> EventM AppName (Next AppState)
 eventHandler state (VtyEvent (EvKey k _)) = handleKey k
   where

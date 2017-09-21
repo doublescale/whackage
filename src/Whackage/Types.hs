@@ -8,6 +8,6 @@ data AppState = AppState
   { gameGrid :: Vector Target
   }
 data Target = NoTarget | Enemy
-type AppEvent = ()
+data CustomEvent = CreateTarget Int
 type AppName = ()
-type MyApp = App AppState AppEvent AppName
+type MyApp = App AppState CustomEvent AppName
