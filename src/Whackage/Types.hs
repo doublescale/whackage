@@ -11,5 +11,5 @@ data AppState = AppState
   }
 data Target = NoTarget | Enemy
 data CustomEvent = CreateTarget
-type AppName = ()
-type MyApp = App AppState CustomEvent AppName
+type NameTag = ()
+type MyApp = App AppState CustomEvent NameTag

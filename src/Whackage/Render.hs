@@ -8,7 +8,7 @@ import Brick.Widgets.Center
 
 import Whackage.Types
 
-renderState :: AppState -> [Widget AppName]
+renderState :: AppState -> [Widget n]
 renderState state = pure . center . renderGrid . gameGrid $ state
   where
     renderGrid grid =
