@@ -35,7 +35,7 @@ myApp = App
 getInitState :: IO AppState
 getInitState = do
   gen <- getStdGen
-  return AppState
+  return . InGame $ GameState
     { gameGrid  = Vector.replicate 9 NoTarget
     , randomGen = gen
     }
