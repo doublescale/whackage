@@ -1,6 +1,7 @@
 module Whackage.Event where
 
 import Data.Vector ((//))
+import System.Random (randomR)
 
 import Brick.Main
 import Brick.Types
@@ -26,6 +27,15 @@ eventHandler state (VtyEvent (EvKey k _)) = handleKey k
     handleKey _           = continue state
     hitTarget i =
       continue $ state { gameGrid = gameGrid state // [(i, NoTarget)] }
-eventHandler state (AppEvent (CreateTarget i)) =
-  continue $ state { gameGrid = gameGrid state // [(i, Enemy)] }
+eventHandler state (AppEvent CreateTarget) =
+  continue $ createRandomTarget state
 eventHandler state _ = continue state
+
+createRandomTarget :: AppState -> AppState
+createRandomTarget state@(AppState { gameGrid = oldGrid, randomGen = oldGen }) =
+  state
+    { gameGrid  = oldGrid // [(targetPos, Enemy)]
+    , randomGen = nextGen
+    }
+  where
+    (targetPos, nextGen) = randomR (0, 8) oldGen

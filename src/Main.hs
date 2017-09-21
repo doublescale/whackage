@@ -1,9 +1,9 @@
 module Main where
 
 import Control.Concurrent (forkIO, threadDelay)
-import Control.Monad (void, forM_)
+import Control.Monad (void, forever)
 import qualified Data.Vector as Vector
-import System.Random
+import System.Random (getStdGen)
 
 import Brick.AttrMap
 import Brick.BChan
@@ -17,10 +17,10 @@ import Whackage.Event
 main :: IO ()
 main = do
   chan <- newBChan 64
-  randomGen <- getStdGen
-  void . forkIO . forM_ (randomRs (0, 8) randomGen) $ \targetPos -> do
+  void . forkIO . forever $ do
     threadDelay 500000
-    writeBChan chan (CreateTarget targetPos)
+    writeBChan chan CreateTarget
+  initState <- getInitState
   void $ customMain (mkVty defaultConfig) (Just chan) myApp initState
 
 myApp :: MyApp
@@ -32,7 +32,10 @@ myApp = App
   , appAttrMap = const $ attrMap defAttr []
   }
 
-initState :: AppState
-initState = AppState
-  { gameGrid = Vector.replicate 9 NoTarget
-  }
+getInitState :: IO AppState
+getInitState = do
+  gen <- getStdGen
+  return AppState
+    { gameGrid  = Vector.replicate 9 NoTarget
+    , randomGen = gen
+    }
