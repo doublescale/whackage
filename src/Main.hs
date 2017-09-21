@@ -2,7 +2,6 @@ module Main where
 
 import Control.Concurrent (forkIO, threadDelay)
 import Control.Monad (void, forever)
-import qualified Data.Vector as Vector
 import System.Random (getStdGen)
 
 import Brick.AttrMap
@@ -35,7 +34,4 @@ myApp = App
 getInitState :: IO AppState
 getInitState = do
   gen <- getStdGen
-  return . InGame $ GameState
-    { gameGrid  = Vector.replicate 9 NoTarget
-    , randomGen = gen
-    }
+  return . InTitle $ TitleState gen

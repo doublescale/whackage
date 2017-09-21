@@ -1,6 +1,7 @@
 module Whackage.Types where
 
-import Data.Vector (Vector, (//))
+import Prelude hiding (replicate)
+import Data.Vector (Vector, (//), replicate)
 import System.Random (StdGen, randomR)
 
 import Brick.Main (App)
@@ -11,11 +12,23 @@ type NameTag = ()
 type MyApp = App AppState CustomEvent NameTag
 type GridPos = Int
 
-data AppState = InGame GameState
+data AppState
+  = InTitle TitleState
+  | InGame GameState
+
+data TitleState = TitleState { titleRandomGen :: StdGen }
+
 data GameState = GameState
   { gameGrid  :: Vector Target
   , randomGen :: StdGen
   }
+
+startGame :: TitleState -> GameState
+startGame (TitleState gen) =
+  GameState
+    { gameGrid  = replicate 9 NoTarget
+    , randomGen = gen
+    }
 
 hitTarget :: GridPos -> GameState -> GameState
 hitTarget targetPos state@(GameState { gameGrid = grid }) =

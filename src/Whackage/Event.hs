@@ -9,6 +9,9 @@ import Whackage.Types
 eventHandler :: AppState
              -> BrickEvent n CustomEvent
              -> EventM n (Next AppState)
+eventHandler (InTitle titleState) (VtyEvent (EvKey _ _)) =
+  continue . InGame . startGame $ titleState
+eventHandler state@(InTitle titleState) _ = continue state
 eventHandler (InGame gameState) event =
   fmap InGame <$> gameEventHandler gameState event
 
