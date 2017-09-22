@@ -8,7 +8,8 @@ author:              doublescale
 maintainer:          doublescale@tutanota.com
 category:            Game
 build-type:          Simple
-extra-source-files:  ChangeLog.md
+extra-doc-files:     ChangeLog.md
+                   , README.md
 cabal-version:       >=1.10
 
 executable whackage
