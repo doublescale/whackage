@@ -1,6 +1,7 @@
 module Whackage.Types where
 
-import Prelude hiding (replicate)
+import Whackage.Prelude
+
 import Data.Vector (Vector, (//), replicate)
 import System.Random (StdGen, randomR)
 

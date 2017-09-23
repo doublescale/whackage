@@ -1,5 +1,7 @@
 module Whackage.Render where
 
+import Whackage.Prelude
+
 import Data.Vector ((!))
 
 import Brick.Types

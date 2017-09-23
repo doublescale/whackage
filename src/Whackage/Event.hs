@@ -1,5 +1,7 @@
 module Whackage.Event where
 
+import Whackage.Prelude
+
 import Brick.Main
 import Brick.Types
 import Graphics.Vty.Input

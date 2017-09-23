@@ -1,7 +1,9 @@
 module Main where
 
+import Whackage.Prelude
+
 import Control.Concurrent (forkIO, threadDelay)
-import Control.Monad (void, forever)
+import Control.Monad (forever)
 import System.Random (getStdGen)
 
 import Brick.AttrMap
@@ -28,11 +30,11 @@ myApp = App
   { appDraw = renderState
   , appChooseCursor = showFirstCursor
   , appHandleEvent = eventHandler
-  , appStartEvent = return
+  , appStartEvent = pure
   , appAttrMap = const $ attrMap defAttr []
   }
 
 getInitState :: IO AppState
 getInitState = do
   gen <- getStdGen
-  return . InTitle $ TitleState gen
+  pure . InTitle $ TitleState gen
