@@ -17,7 +17,7 @@ renderState (InGame gameState) = renderGame gameState
 renderTitle :: [Widget n]
 renderTitle = pure . vCenter $
   line "WHACKAGE!" <=> padTop (Pad 1) (line "Press any key to start.")
-  where line = hCenter . str
+  where line = hCenter . txt
 
 renderGame :: GameState -> [Widget n]
 renderGame state = pure . center . renderGrid . gameGrid $ state
@@ -28,5 +28,5 @@ renderGame state = pure . center . renderGrid . gameGrid $ state
           [ renderTarget $ grid ! (y, x)
           | x <- [x0..x1] ]
         | y <- [y0..y1] ]
-    renderTarget NoTarget = str "... " <=> str "    "
-    renderTarget Enemy    = str "òuó " <=> str "    "
+    renderTarget NoTarget = txt "... " <=> txt "    "
+    renderTarget Enemy    = txt "òuó " <=> txt "    "
