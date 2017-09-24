@@ -1,6 +1,8 @@
 module Whackage.Event where
 
 import Whackage.Prelude
+import Control.Monad.IO.Class (liftIO)
+import System.Random (getStdGen)
 
 import Brick.Main
 import Brick.Types
@@ -11,11 +13,15 @@ import Whackage.Types
 eventHandler :: AppState
              -> BrickEvent n CustomEvent
              -> EventM n (Next AppState)
-eventHandler (InTitle titleState) (VtyEvent (EvKey _ _)) =
-  continue . InGame . startGame $ titleState
-eventHandler state@(InTitle _) _ = continue state
+eventHandler InTitle event = titleEventHandler event
 eventHandler (InGame gameState) event =
   fmap InGame <$> gameEventHandler gameState event
+
+titleEventHandler :: BrickEvent n CustomEvent -> EventM n (Next AppState)
+titleEventHandler (VtyEvent (EvKey _ _)) = do
+  gen <- liftIO getStdGen
+  continue . InGame $ GameState { gameGrid = emptyGrid, randomGen = gen }
+titleEventHandler _ = continue InTitle
 
 gameEventHandler :: GameState
                  -> BrickEvent n CustomEvent

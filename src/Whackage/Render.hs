@@ -1,7 +1,6 @@
 module Whackage.Render where
 
 import Whackage.Prelude
-
 import Data.Array ((!), bounds)
 
 import Brick.Types
@@ -11,7 +10,7 @@ import Brick.Widgets.Center
 import Whackage.Types
 
 renderState :: AppState -> [Widget n]
-renderState (InTitle _) = renderTitle
+renderState InTitle = renderTitle
 renderState (InGame gameState) = renderGame gameState
 
 renderTitle :: [Widget n]

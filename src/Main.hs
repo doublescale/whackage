@@ -1,10 +1,8 @@
 module Main where
 
 import Whackage.Prelude
-
 import Control.Concurrent (forkIO, threadDelay)
 import Control.Monad (forever)
-import System.Random (getStdGen)
 
 import Brick.AttrMap
 import Brick.BChan
@@ -22,8 +20,7 @@ main = do
     -- TODO: Only send events when in-game.
     threadDelay 500000
     writeBChan chan CreateTarget
-  initState <- getInitState
-  void $ customMain (mkVty defaultConfig) (Just chan) myApp initState
+  void $ customMain (mkVty defaultConfig) (Just chan) myApp InTitle
 
 myApp :: MyApp
 myApp = App
@@ -33,8 +30,3 @@ myApp = App
   , appStartEvent = pure
   , appAttrMap = const $ attrMap defAttr []
   }
-
-getInitState :: IO AppState
-getInitState = do
-  gen <- getStdGen
-  pure . InTitle $ TitleState gen
