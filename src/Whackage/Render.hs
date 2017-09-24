@@ -17,7 +17,11 @@ renderState (InGame gameState) = renderGame gameState
 renderState (InGameOver score) = renderGameOver score
 
 renderTitle :: [Widget n]
-renderTitle = pure . spacedCentered $ ["WHACKAGE!", "Press any key to start."]
+renderTitle = pure . spacedCentered $
+  [ "WHACKAGE!"
+  , "Hit the NumPad buttons to whack the mean faces!"
+  , "Press any key to start."
+  ]
 
 renderGame :: GameState -> [Widget n]
 renderGame state = [renderStatusPane state, center $ renderGrid state]
