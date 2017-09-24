@@ -22,6 +22,7 @@ executable whackage
                      , Whackage.Types
                      , Whackage.Render
                      , Whackage.Event
+                     , Whackage.Random
   build-depends:       base
                      , random
                      , array
