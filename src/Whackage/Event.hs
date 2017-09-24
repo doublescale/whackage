@@ -23,15 +23,15 @@ gameEventHandler :: GameState
 gameEventHandler state (VtyEvent (EvKey KEsc _)) = halt state
 gameEventHandler state (VtyEvent (EvKey k [])) = continue $ handleKey k state
   where
-    handleKey (KChar '1') = hitTarget 0
-    handleKey (KChar '2') = hitTarget 1
-    handleKey (KChar '3') = hitTarget 2
-    handleKey (KChar '4') = hitTarget 3
-    handleKey (KChar '5') = hitTarget 4
-    handleKey (KChar '6') = hitTarget 5
-    handleKey (KChar '7') = hitTarget 6
-    handleKey (KChar '8') = hitTarget 7
-    handleKey (KChar '9') = hitTarget 8
+    handleKey (KChar '1') = hitTarget (2,0)
+    handleKey (KChar '2') = hitTarget (2,1)
+    handleKey (KChar '3') = hitTarget (2,2)
+    handleKey (KChar '4') = hitTarget (1,0)
+    handleKey (KChar '5') = hitTarget (1,1)
+    handleKey (KChar '6') = hitTarget (1,2)
+    handleKey (KChar '7') = hitTarget (0,0)
+    handleKey (KChar '8') = hitTarget (0,1)
+    handleKey (KChar '9') = hitTarget (0,2)
     handleKey _           = id
 gameEventHandler state (AppEvent CreateTarget) =
   continue $ makeRandomTarget state
