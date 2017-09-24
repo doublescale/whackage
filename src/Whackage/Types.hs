@@ -14,14 +14,18 @@ type NameTag = ()
 type MyApp = App AppState CustomEvent NameTag
 type GridPos = (Int, Int)
 type GameGrid = Array GridPos Target
+type Score = Int
 
 data AppState
   = InTitle
   | InGame GameState
+  | InGameOver Score
 
 data GameState = GameState
-  { gameGrid  :: Array GridPos Target
-  , randomGen :: StdGen
+  { gameGrid    :: Array GridPos Target
+  , playerHp    :: Int
+  , playerScore :: Score
+  , randomGen   :: StdGen
   }
 
 emptyGrid :: GameGrid

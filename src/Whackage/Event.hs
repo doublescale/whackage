@@ -16,11 +16,19 @@ eventHandler :: AppState
 eventHandler InTitle event = titleEventHandler event
 eventHandler (InGame gameState) event =
   fmap InGame <$> gameEventHandler gameState event
+eventHandler (InGameOver score) event =
+  fmap InGameOver <$> gameOverEventHandler score event
 
 titleEventHandler :: BrickEvent n CustomEvent -> EventM n (Next AppState)
 titleEventHandler (VtyEvent (EvKey _ _)) = do
   gen <- liftIO getStdGen
-  continue . InGame $ GameState { gameGrid = emptyGrid, randomGen = gen }
+  continue . InGame $
+    GameState
+      { gameGrid    = emptyGrid
+      , playerHp    = 5
+      , playerScore = 0
+      , randomGen   = gen
+      }
 titleEventHandler _ = continue InTitle
 
 gameEventHandler :: GameState
@@ -42,3 +50,9 @@ gameEventHandler state (VtyEvent (EvKey k [])) = continue $ handleKey k state
 gameEventHandler state (AppEvent CreateTarget) =
   continue $ makeRandomTarget state
 gameEventHandler state _ = continue state
+
+gameOverEventHandler :: Score
+                     -> BrickEvent n CustomEvent
+                     -> EventM n (Next Score)
+gameOverEventHandler score (VtyEvent (EvKey _ _)) = halt score
+gameOverEventHandler score _ = continue score
