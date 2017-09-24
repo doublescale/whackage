@@ -13,13 +13,17 @@ import Whackage.Types
 eventHandler :: AppState
              -> BrickEvent n CustomEvent
              -> EventM n (Next AppState)
+eventHandler state (VtyEvent (EvKey KEsc _)) = halt state
 eventHandler InTitle event = titleEventHandler event
 eventHandler (InGame gameState) event =
-  fmap InGame <$> gameEventHandler gameState event
+  fmap nextState <$> gameEventHandler gameState event
+    where nextState state@GameState { playerHp = hp, playerScore = score }
+            | hp <= 0   = InGameOver score
+            | otherwise = InGame state
 eventHandler (InGameOver score) event =
   fmap InGameOver <$> gameOverEventHandler score event
 
-titleEventHandler :: BrickEvent n CustomEvent -> EventM n (Next AppState)
+titleEventHandler :: BrickEvent n e -> EventM n (Next AppState)
 titleEventHandler (VtyEvent (EvKey _ _)) = do
   gen <- liftIO getStdGen
   continue . InGame $
@@ -34,7 +38,6 @@ titleEventHandler _ = continue InTitle
 gameEventHandler :: GameState
                  -> BrickEvent n CustomEvent
                  -> EventM n (Next GameState)
-gameEventHandler state (VtyEvent (EvKey KEsc _)) = halt state
 gameEventHandler state (VtyEvent (EvKey k [])) = continue $ handleKey k state
   where
     handleKey (KChar '1') = hitTarget (2,0)
@@ -52,7 +55,6 @@ gameEventHandler state (AppEvent CreateTarget) =
 gameEventHandler state _ = continue state
 
 gameOverEventHandler :: Score
-                     -> BrickEvent n CustomEvent
+                     -> BrickEvent n e
                      -> EventM n (Next Score)
-gameOverEventHandler score (VtyEvent (EvKey _ _)) = halt score
 gameOverEventHandler score _ = continue score

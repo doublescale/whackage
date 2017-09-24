@@ -43,7 +43,11 @@ renderGrid state =
 
 renderGameOver :: Score -> [Widget n]
 renderGameOver score = pure . spacedCentered $
-  [ "Game Over" , pack $ printf "You got %d points." score ]
+  [ "GAME OVER"
+  , pack $
+      printf "You got %d point%s." score (bool "s" "" (score == 1) :: String)
+  , "Press Escape to exit."
+  ]
 
 spacedCentered :: [Text] -> Widget n
 spacedCentered = center . vBox . fmap (hCenter . padBottom (Pad 1) . txt)

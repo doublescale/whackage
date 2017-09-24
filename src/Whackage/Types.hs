@@ -1,14 +1,14 @@
 module Whackage.Types where
 
 import Whackage.Prelude
-import Data.Array (Array, (//), listArray, bounds)
+import Data.Array (Array, (!), (//), listArray, bounds)
 import System.Random (StdGen, randomR)
 
 import Brick.Main (App)
 
 import Whackage.Random ()
 
-data Target = NoTarget | Enemy
+data Target = NoTarget | Enemy deriving (Eq)
 data CustomEvent = CreateTarget
 type NameTag = ()
 type MyApp = App AppState CustomEvent NameTag
@@ -33,7 +33,14 @@ emptyGrid = listArray ((0,0), (2,2)) (repeat NoTarget)
 
 hitTarget :: GridPos -> GameState -> GameState
 hitTarget targetPos state@GameState { gameGrid = grid } =
-  state { gameGrid = grid // [(targetPos, NoTarget)] }
+  if missed then
+    state { playerHp = pred $ playerHp state }
+  else
+    state
+      { gameGrid = grid // [(targetPos, NoTarget)]
+      , playerScore = succ $ playerScore state
+      }
+  where missed = grid ! targetPos == NoTarget
 
 makeRandomTarget :: GameState -> GameState
 makeRandomTarget state@GameState { gameGrid = oldGrid, randomGen = oldGen } =
