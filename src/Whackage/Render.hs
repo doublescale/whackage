@@ -2,7 +2,7 @@ module Whackage.Render where
 
 import Whackage.Prelude
 
-import Data.Array ((!))
+import Data.Array ((!), bounds)
 
 import Brick.Types
 import Brick.Widgets.Core
@@ -22,11 +22,11 @@ renderTitle = pure . vCenter $
 renderGame :: GameState -> [Widget n]
 renderGame state = pure . center . renderGrid . gameGrid $ state
   where
-    renderGrid grid =
+    renderGrid grid = let ((y0,x0), (y1,x1)) = bounds grid in
       vBox
         [ hBox
           [ renderTarget $ grid ! (y, x)
-          | x <- [0,1,2] ]
-        | y <- [0,1,2] ]
+          | x <- [x0..x1] ]
+        | y <- [y0..y1] ]
     renderTarget NoTarget = str "... " <=> str "    "
     renderTarget Enemy    = str "òuó " <=> str "    "
