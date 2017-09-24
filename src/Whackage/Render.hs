@@ -2,7 +2,7 @@ module Whackage.Render where
 
 import Whackage.Prelude
 import Data.Array ((!), bounds)
-import Data.Text (pack)
+import Data.Text (Text, pack)
 import Text.Printf (printf)
 
 import Brick.Types
@@ -17,9 +17,7 @@ renderState (InGame gameState) = renderGame gameState
 renderState (InGameOver score) = renderGameOver score
 
 renderTitle :: [Widget n]
-renderTitle = pure . vCenter $
-  line "WHACKAGE!" <=> padTop (Pad 1) (line "Press any key to start.")
-  where line = hCenter . txt
+renderTitle = pure . spacedCentered $ ["WHACKAGE!", "Press any key to start."]
 
 renderGame :: GameState -> [Widget n]
 renderGame state = [renderStatusPane state, center $ renderGrid state]
@@ -44,5 +42,8 @@ renderGrid state =
     ((y0,x0), (y1,x1)) = bounds grid
 
 renderGameOver :: Score -> [Widget n]
-renderGameOver score = pure . center . txt . pack $
-  printf "You got %d points." score
+renderGameOver score = pure . spacedCentered $
+  [ "Game Over" , pack $ printf "You got %d points." score ]
+
+spacedCentered :: [Text] -> Widget n
+spacedCentered = center . vBox . fmap (hCenter . padBottom (Pad 1) . txt)
