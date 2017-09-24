@@ -1,0 +1,9 @@
+- add player score
+- use microlens for state access
+- add player health
+  * decreased when hitting empty field
+  * decreased when target times out
+- add Game Over screen
+- render Unicode grid lines
+- add score + health drops
+- add more target types
