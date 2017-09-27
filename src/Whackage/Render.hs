@@ -2,7 +2,6 @@ module Whackage.Render where
 
 import Whackage.Prelude
 import Data.Array ((!), bounds)
-import Data.Text (Text, pack)
 import Text.Printf (printf)
 
 import Brick.Types
@@ -27,9 +26,9 @@ renderGame :: GameState -> [Widget n]
 renderGame state = [renderStatusPane state, center $ renderGrid state]
 
 renderStatusPane :: GameState -> Widget n
-renderStatusPane state = hBox . fmap (vBox . fmap txt) $
+renderStatusPane state = hBox . fmap (vBox . fmap str) $
   [ ["Health:", "Score:"]
-  , pack . printf "%4d" <$> [playerHp state, playerScore state]
+  , printf "%4d" <$> [playerHp state, playerScore state]
   ]
 
 renderGrid :: GameState -> Widget n
@@ -41,17 +40,16 @@ renderGrid state =
     | y <- [y0..y1] ]
   where
     grid = gameGrid state
-    renderTarget NoTarget = txt "... " <=> txt "    "
-    renderTarget Enemy    = txt "òuó " <=> txt "    "
+    renderTarget NoTarget = str "... " <=> str "    "
+    renderTarget Enemy    = str "òuó " <=> str "    "
     ((y0,x0), (y1,x1)) = bounds grid
 
 renderGameOver :: Score -> [Widget n]
 renderGameOver score = pure . spacedCentered $
   [ "GAME OVER"
-  , pack $
-      printf "You got %d point%s." score (bool "s" "" (score == 1) :: String)
+  , printf "You got %d point%s." score (bool "s" "" (score == 1))
   , "Press Escape to exit."
   ]
 
-spacedCentered :: [Text] -> Widget n
-spacedCentered = center . vBox . fmap (hCenter . padBottom (Pad 1) . txt)
+spacedCentered :: [String] -> Widget n
+spacedCentered = center . vBox . fmap (hCenter . padBottom (Pad 1) . str)
