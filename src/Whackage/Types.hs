@@ -1,7 +1,10 @@
+{-# LANGUAGE TemplateHaskell #-}
+
 module Whackage.Types where
 
 import Whackage.Prelude
-import Data.Array (Array, (!), (//), listArray, bounds)
+import Data.Array (Array, listArray, bounds)
+import Lens.Micro.TH (makeLenses)
 import System.Random (StdGen, randomR)
 
 import Brick.Main (App)
@@ -22,31 +25,31 @@ data AppState
   | InGameOver Score
 
 data GameState = GameState
-  { gameGrid    :: Array GridPos Target
-  , playerHp    :: Int
-  , playerScore :: Score
-  , randomGen   :: StdGen
+  { _gameGrid    :: Array GridPos Target
+  , _playerHp    :: Int
+  , _playerScore :: Score
+  , _randomGen   :: StdGen
   }
+makeLenses ''GameState
 
 emptyGrid :: GameGrid
 emptyGrid = listArray ((0,0), (2,2)) (repeat NoTarget)
 
 hitTarget :: GridPos -> GameState -> GameState
-hitTarget targetPos state@GameState { gameGrid = grid } =
+hitTarget targetPos state =
   if missed then
-    state { playerHp = pred $ playerHp state }
+    state & playerHp %~ pred
   else
     state
-      { gameGrid = grid // [(targetPos, NoTarget)]
-      , playerScore = succ $ playerScore state
-      }
-  where missed = grid ! targetPos == NoTarget
+      & gameGrid . ix targetPos .~ NoTarget
+      & playerScore %~ succ
+  where missed = state ^? gameGrid . ix targetPos ^. non NoTarget == NoTarget
 
 makeRandomTarget :: GameState -> GameState
-makeRandomTarget state@GameState { gameGrid = oldGrid, randomGen = oldGen } =
+makeRandomTarget state =
   state
-    { gameGrid  = oldGrid // [(targetPos, Enemy)]
-    , randomGen = nextGen
-    }
+    & gameGrid . ix targetPos .~ Enemy
+    & randomGen .~ nextGen
   where
-    (targetPos, nextGen) = randomR (bounds oldGrid) oldGen
+    (targetPos, nextGen) =
+      randomR (bounds (state ^. gameGrid)) (state ^. randomGen)

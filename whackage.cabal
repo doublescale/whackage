@@ -26,5 +26,7 @@ executable whackage
   build-depends:       base
                      , random
                      , array
+                     , microlens-ghc
+                     , microlens-th
                      , vty
                      , brick

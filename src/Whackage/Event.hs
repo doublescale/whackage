@@ -17,8 +17,8 @@ eventHandler state (VtyEvent (EvKey KEsc _)) = halt state
 eventHandler InTitle event = titleEventHandler event
 eventHandler (InGame gameState) event =
   fmap nextState <$> gameEventHandler gameState event
-    where nextState state@GameState { playerHp = hp, playerScore = score }
-            | hp <= 0   = InGameOver score
+    where nextState state
+            | state ^. playerHp <= 0 = InGameOver (state ^. playerScore)
             | otherwise = InGame state
 eventHandler (InGameOver score) event =
   fmap InGameOver <$> gameOverEventHandler score event
@@ -28,10 +28,10 @@ titleEventHandler (VtyEvent (EvKey _ _)) = do
   gen <- liftIO getStdGen
   continue . InGame $
     GameState
-      { gameGrid    = emptyGrid
-      , playerHp    = 5
-      , playerScore = 0
-      , randomGen   = gen
+      { _gameGrid    = emptyGrid
+      , _playerHp    = 5
+      , _playerScore = 0
+      , _randomGen   = gen
       }
 titleEventHandler _ = continue InTitle
 

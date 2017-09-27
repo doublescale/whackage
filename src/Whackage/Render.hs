@@ -28,7 +28,7 @@ renderGame state = [renderStatusPane state, center $ renderGrid state]
 renderStatusPane :: GameState -> Widget n
 renderStatusPane state = hBox . fmap (vBox . fmap str) $
   [ ["Health:", "Score:"]
-  , printf "%4d" <$> [playerHp state, playerScore state]
+  , printf "%4d" <$> state ^.. (playerHp <> playerScore)
   ]
 
 renderGrid :: GameState -> Widget n
@@ -39,7 +39,7 @@ renderGrid state =
       | x <- [x0..x1] ]
     | y <- [y0..y1] ]
   where
-    grid = gameGrid state
+    grid = state ^. gameGrid
     renderTarget NoTarget = str "... " <=> str "    "
     renderTarget Enemy    = str "òuó " <=> str "    "
     ((y0,x0), (y1,x1)) = bounds grid
