@@ -2,6 +2,7 @@ module Whackage.Render where
 
 import Whackage.Prelude
 import Data.Array ((!), bounds)
+import Lens.Micro
 import Text.Printf (printf)
 
 import Brick.Types

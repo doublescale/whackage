@@ -2,6 +2,7 @@ module Whackage.Event where
 
 import Whackage.Prelude
 import Control.Monad.IO.Class (liftIO)
+import Lens.Micro
 import System.Random (getStdGen)
 
 import Brick.Main
