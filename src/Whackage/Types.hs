@@ -40,13 +40,13 @@ emptyGrid :: GameGrid
 emptyGrid = listArray ((0,0), (2,2)) (repeat NoTarget)
 
 hitTarget :: GridPos -> GameState -> GameState
-hitTarget targetPos st =
-  if missed then
-    st & playerHp %~ pred
-  else
-    st & gameGrid . ix targetPos .~ NoTarget
-       & playerScore %~ succ
-  where missed = st ^? gameGrid . ix targetPos ^. non NoTarget == NoTarget
+hitTarget targetPos = execState $ do
+  target <- fromMaybe NoTarget <$> preuse (gameGrid . ix targetPos)
+  case target of
+    NoTarget -> playerHp -= 1
+    _ -> do
+      gameGrid . ix targetPos .= NoTarget
+      playerScore += 1
 
 randomPos :: (MonadState GameState m) => m GridPos
 randomPos = do
